@@ -5,7 +5,7 @@ FlareBot suggestions is a small bot built for the FlareBot official Discord, it 
 ## How it works
 Users have two commands they can use, `submit` and `vote` these allow the user to submit a suggestion and vote on existing suggestions. Note that you need to put **at least** 5 words in the submission and a maximum of 500 characters or it will return a usage. To vote simply use the ID which is displayed in the suggestion embed.  
 Embed structure:  
-(id) - Suggested by Username#discrim
+(id) - Suggested by Username#discrim  
 Suggestion
 
 Votes
