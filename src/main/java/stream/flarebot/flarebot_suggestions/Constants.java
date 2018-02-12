@@ -1,4 +1,4 @@
-package com.walshydev.flarebot_suggestions;
+package stream.flarebot.flarebot_suggestions;
 
 public class Constants {
 

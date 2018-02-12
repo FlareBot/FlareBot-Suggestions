@@ -1,10 +1,10 @@
-package com.walshydev.flarebot_suggestions;
+package stream.flarebot.flarebot_suggestions;
 
-import com.walshydev.flarebot_suggestions.commands.SubmitCommand;
-import com.walshydev.flarebot_suggestions.commands.admin.DupeCommand;
-import com.walshydev.flarebot_suggestions.commands.admin.QuitCommand;
-import com.walshydev.flarebot_suggestions.commands.admin.RemoveCommand;
-import com.walshydev.flarebot_suggestions.commands.VoteCommand;
+import stream.flarebot.flarebot_suggestions.commands.SubmitCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.DupeCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.QuitCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.RemoveCommand;
+import stream.flarebot.flarebot_suggestions.commands.VoteCommand;
 import com.walshydev.jba.Config;
 import com.walshydev.jba.JBA;
 import com.walshydev.jba.SQLController;

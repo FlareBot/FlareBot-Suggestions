@@ -10,8 +10,8 @@
 
     <repositories>
         <repository>
-            <id>JBA-mvn-repo</id>
-            <url>https://raw.github.com/WalshyDev/JBA/mvn-repo</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>jcenter</id>
@@ -80,7 +80,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.walshydev.flarebot_suggestions.FlareBotSuggestions</mainClass>
+                            <mainClass>stream.flarebot.flarebot_suggestions.FlareBotSuggestions</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

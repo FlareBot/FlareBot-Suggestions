@@ -1,13 +1,12 @@
-package com.walshydev.flarebot_suggestions.commands.admin;
+package stream.flarebot.flarebot_suggestions.commands.admin;
 
-import com.walshydev.flarebot_suggestions.FlareBotSuggestions;
-import com.walshydev.flarebot_suggestions.Suggestion;
-import com.walshydev.flarebot_suggestions.SuggestionsManager;
 import com.walshydev.jba.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
+import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 
 public class DupeCommand implements Command {
 

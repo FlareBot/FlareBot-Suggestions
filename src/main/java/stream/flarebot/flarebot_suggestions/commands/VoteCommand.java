@@ -1,7 +1,7 @@
-package com.walshydev.flarebot_suggestions.commands;
+package stream.flarebot.flarebot_suggestions.commands;
 
-import com.walshydev.flarebot_suggestions.Suggestion;
-import com.walshydev.flarebot_suggestions.SuggestionsManager;
+import stream.flarebot.flarebot_suggestions.Suggestion;
+import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 import com.walshydev.jba.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
