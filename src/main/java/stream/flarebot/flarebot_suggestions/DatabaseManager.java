@@ -17,13 +17,10 @@ public class DatabaseManager {
         try {
             SQLController.runSqlTask(connection -> {
                 PreparedStatement statement;
-                String query;
-                if (s.getId() == null) {
-                    query = "INSERT INTO suggestions (suggested_by, suggested_by_tag, suggestion, voted_users, message_id, status) VALUES (?, ?, ?, ?, ?, ?);";
-                } else {
-                    query =
-                            "UPDATE suggestions SET suggested_by=?, suggested_by_tag=?, suggestion=?, voted_users=?, message_id=?, status=? WHERE suggestion_id=?;";
-                }
+                String query =
+                        "INSERT INTO suggestions (suggestion_id, suggested_by, suggested_by_tag, suggestion, voted_users, message_id, status)" +
+                                " VALUES (" + s.getId() + ", ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE suggested_by=VALUES(suggested_by), " +
+                                "suggested_by_tag=VALUES(suggested_by_tag), suggestion=VALUES(suggestion), voted_users=VALUES(voted_users), message_id=VALUES(message_id), status=VALUES(status);";
                 statement =
                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 statement.setString(1, String.valueOf(s.getSuggestedBy()));
@@ -32,9 +29,6 @@ public class DatabaseManager {
                 statement.setString(4, (s.getVotedUsers().stream().map(String::valueOf).collect(Collectors.joining(","))));
                 statement.setString(5, String.valueOf(s.getMessageId()));
                 statement.setString(6, s.getStatus().name());
-                if (s.getId() != null) {
-                    statement.setInt(7, s.getId());
-                }
                 int affectedRows = statement.executeUpdate();
 
                 if (affectedRows == 0) {
