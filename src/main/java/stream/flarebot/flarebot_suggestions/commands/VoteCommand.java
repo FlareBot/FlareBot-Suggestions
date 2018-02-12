@@ -1,5 +1,6 @@
 package stream.flarebot.flarebot_suggestions.commands;
 
+import stream.flarebot.flarebot_suggestions.DatabaseManager;
 import stream.flarebot.flarebot_suggestions.Suggestion;
 import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 import com.walshydev.jba.commands.Command;
@@ -21,7 +22,7 @@ public class VoteCommand implements Command {
                 return;
             }
 
-            Suggestion s = SuggestionsManager.getInstance().getSuggestionById(id);
+            Suggestion s = DatabaseManager.getSuggestion(id);
             if (s != null) {
                 if (s.getVotedUsers().contains(user.getIdLong())) {
                     channel.sendMessage("You can't vote twice you silly goose!").queue();

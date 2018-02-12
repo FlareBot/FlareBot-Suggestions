@@ -37,7 +37,6 @@ public class FlareBotSuggestions extends JBA {
     }
 
     private void init() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::quit));
         config = new Config("config");
 
         setupMySQL(config.getString("mysql.user"), config.getString("mysql.password"),
@@ -75,52 +74,15 @@ public class FlareBotSuggestions extends JBA {
     private void load() {
         try {
             SQLController.runSqlTask(conn -> {
-                conn.createStatement().execute("CREATE TABLE IF NOT EXISTS suggestions (suggestion_id INT(10) PRIMARY KEY, " +
+                conn.createStatement().execute("CREATE TABLE IF NOT EXISTS suggestions (suggestion_id INT(10) PRIMARY KEY AUTO_INCREMENT, " +
                         "suggested_by VARCHAR(20), suggested_by_tag VARCHAR(40), suggestion TEXT, voted_users TEXT, " +
-                        "message_id VARCHAR(20))");
-
-                ResultSet set = conn.createStatement().executeQuery("SELECT * FROM suggestions");
-                while(set.next()) {
-                    Set<Long> voted = new HashSet<>();
-                    for (String s : set.getString("voted_users").split(", ?"))
-                        voted.add(Long.parseLong(s));
-
-                    SuggestionsManager.getInstance().submitSuggestion(new Suggestion(set.getInt("suggestion_id"),
-                            Long.parseLong(set.getString("suggested_by")), set.getString("suggested_by_tag"),
-                            set.getString("suggestion"), voted, Long.parseLong(set.getString("message_id"))), false);
-
-                }
+                        "message_id VARCHAR(20), status VARCHAR(15))");
             });
         } catch (SQLException e) {
-            LOGGER.error("Failed to load suggestions!", e);
+            LOGGER.error("Failed to create table!", e);
         }
-    }
-
-    private void quit() {
-        try {
-            SQLController.runSqlTask(conn -> {
-                conn.createStatement().execute("CREATE TABLE IF NOT EXISTS suggestions (suggestion_id INT(10) PRIMARY KEY, " +
-                        "suggested_by VARCHAR(20), suggested_by_tag VARCHAR(40), suggestion TEXT, voted_users TEXT, " +
-                        "message_id VARCHAR(20))");
-
-                conn.createStatement().execute("TRUNCATE suggestions");
-
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO suggestions (suggestion_id, suggested_by, " +
-                        "suggested_by_tag, suggestion, voted_users, message_id) VALUES (?, ?, ?, ?, ?, ?)");
-                for (Suggestion s : SuggestionsManager.getInstance().getSuggestions().values()) {
-                    ps.setInt(1, s.getId());
-                    ps.setString(2, String.valueOf(s.getSuggestedBy()));
-                    ps.setString(3, s.getSuggestedByTag());
-                    ps.setString(4, s.getSuggestion());
-                    ps.setString(5, (s.getVotedUsers().stream().map(String::valueOf).collect(Collectors.joining(","))));
-                    ps.setString(6, String.valueOf(s.getMessageId()));
-                    ps.execute();
-                }
-            });
-        } catch (SQLException e) {
-            System.err.println("Shit");
-            e.printStackTrace();
-            LOGGER.error("Failed to save suggestions!", e);
+        for (Suggestion suggestion : DatabaseManager.getSuggestions()) {
+            SuggestionsManager.getInstance().submitSuggestion(suggestion);
         }
     }
 }

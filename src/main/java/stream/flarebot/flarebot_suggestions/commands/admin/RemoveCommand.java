@@ -1,5 +1,6 @@
 package stream.flarebot.flarebot_suggestions.commands.admin;
 
+import stream.flarebot.flarebot_suggestions.DatabaseManager;
 import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
 import stream.flarebot.flarebot_suggestions.Suggestion;
 import stream.flarebot.flarebot_suggestions.SuggestionsManager;
@@ -23,7 +24,7 @@ public class RemoveCommand implements Command {
                     return;
                 }
 
-                Suggestion s = SuggestionsManager.getInstance().getSuggestionById(id);
+                Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
                     SuggestionsManager.getInstance().removeSuggesstion(id);
                     channel.sendMessage("Removed suggestion #" + id).queue();

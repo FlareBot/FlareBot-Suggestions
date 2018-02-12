@@ -25,7 +25,7 @@ public class SubmitCommand implements Command {
                         channel.sendMessage(user.getAsMention() + " I couldn't DM you! Check your privacy settings!").queue());
                 // ignore a fail
             }
-            SuggestionsManager.getInstance().submitSuggestion(new Suggestion(user, msg), false);
+            SuggestionsManager.getInstance().submitSuggestion(new Suggestion(user, msg));
         } else {
             channel.sendMessage("**Usage**: `submit <suggestion>`").queue();
         }

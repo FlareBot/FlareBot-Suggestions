@@ -1,5 +1,6 @@
 package stream.flarebot.flarebot_suggestions;
 
+import java.awt.Color;
 import net.dv8tion.jda.core.entities.User;
 
 import java.util.HashSet;
@@ -7,8 +8,9 @@ import java.util.Set;
 
 public class Suggestion {
 
-    private int id;
+    private Integer id;
     private long suggestedBy;
+    private Status status;
     private String suggestedByTag;
     private String suggestion;
     private Set<Long> votedUsers = new HashSet<>();
@@ -19,12 +21,14 @@ public class Suggestion {
         this.suggestedBy = user.getIdLong();
         this.suggestedByTag = user.getName() + "#" + user.getDiscriminator();
         this.suggestion = suggestion;
+        this.status = Status.OPEN;
         votedUsers.add(suggestedBy);
     }
 
-    public Suggestion(int id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId) {
+    public Suggestion(Integer id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId, Status status) {
         this.id = id;
         this.suggestedBy = suggestedBy;
+        this.status = status;
         if (suggestedByTag == null) {
             User u = FlareBotSuggestions.getInstance().getClient().getUserById(suggestedBy);
             if (u != null)
@@ -38,11 +42,11 @@ public class Suggestion {
         this.messageId = messageId;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -77,4 +81,32 @@ public class Suggestion {
     public void setMessageId(long messageId) {
         this.messageId = messageId;
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public enum Status {
+        OPEN(Color.CYAN),
+        IN_PROGRESS(Color.YELLOW),
+        REJECTED(Color.RED),
+        COMPLETED;
+
+        Color c = null;
+
+        Status() {}
+
+        Status(Color c) {
+            this.c = c;
+        }
+
+        public Color getColor() {
+            return c;
+        }
+    }
+
 }
