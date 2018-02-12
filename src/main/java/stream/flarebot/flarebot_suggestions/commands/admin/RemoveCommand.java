@@ -26,7 +26,7 @@ public class RemoveCommand implements Command {
 
                 Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
-                    SuggestionsManager.getInstance().removeSuggesstion(id);
+                    SuggestionsManager.getInstance().removeSuggestion(id);
                     channel.sendMessage("Removed suggestion #" + id).queue();
                 } else {
                     channel.sendMessage("Invalid suggestion ID! Please refer to the number at the start of the title in " +

@@ -12,12 +12,8 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import stream.flarebot.flarebot_suggestions.commands.admin.StatusCommand;
 
 /*
 
@@ -55,6 +51,7 @@ public class FlareBotSuggestions extends JBA {
         registerCommand(new DupeCommand());
         registerCommand(new RemoveCommand());
         registerCommand(new QuitCommand());
+        registerCommand(new StatusCommand());
     }
 
     public static FlareBotSuggestions getInstance() {
@@ -82,7 +79,8 @@ public class FlareBotSuggestions extends JBA {
             LOGGER.error("Failed to create table!", e);
         }
         for (Suggestion suggestion : DatabaseManager.getSuggestions()) {
-            SuggestionsManager.getInstance().submitSuggestion(suggestion);
+            SuggestionsManager.getInstance().sendSuggestionMessage(suggestion);
         }
+        SuggestionsManager.getInstance().orderSuggestions();
     }
 }

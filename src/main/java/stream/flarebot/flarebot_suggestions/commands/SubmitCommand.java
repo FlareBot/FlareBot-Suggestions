@@ -27,7 +27,8 @@ public class SubmitCommand implements Command {
             }
             SuggestionsManager.getInstance().submitSuggestion(new Suggestion(user, msg));
         } else {
-            channel.sendMessage("**Usage**: `submit <suggestion>`").queue();
+            channel.sendMessage("The suggestion needs to be at least 5 words!\n" +
+                    "**Usage**: `submit <suggestion>`").queue();
         }
     }
 
