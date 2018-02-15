@@ -4,6 +4,7 @@ import com.walshydev.jba.Config;
 import com.walshydev.jba.JBA;
 import com.walshydev.jba.SQLController;
 import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import stream.flarebot.flarebot_suggestions.commands.SubmitCommand;
@@ -47,6 +48,7 @@ public class FlareBotSuggestions extends JBA {
         load();
 
         getClient().addEventListener(new EventyThing());
+        getClient().getPresence().setGame(Game.watching("Suggestions roll in | -submit"));
 
         registerCommand(new SubmitCommand());
         registerCommand(new VoteCommand());
