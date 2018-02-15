@@ -1,19 +1,19 @@
 package stream.flarebot.flarebot_suggestions;
 
-import stream.flarebot.flarebot_suggestions.commands.SubmitCommand;
-import stream.flarebot.flarebot_suggestions.commands.admin.DupeCommand;
-import stream.flarebot.flarebot_suggestions.commands.admin.QuitCommand;
-import stream.flarebot.flarebot_suggestions.commands.admin.RemoveCommand;
-import stream.flarebot.flarebot_suggestions.commands.VoteCommand;
 import com.walshydev.jba.Config;
 import com.walshydev.jba.JBA;
 import com.walshydev.jba.SQLController;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import stream.flarebot.flarebot_suggestions.commands.SubmitCommand;
+import stream.flarebot.flarebot_suggestions.commands.VoteCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.DupeCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.QuitCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.RemoveCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.StatusCommand;
 
 import java.sql.SQLException;
-import stream.flarebot.flarebot_suggestions.commands.admin.StatusCommand;
 
 /*
 
@@ -44,6 +44,8 @@ public class FlareBotSuggestions extends JBA {
     @Override
     public void run() {
         load();
+
+        getClient().addEventListener(new EventyThing());
 
         registerCommand(new SubmitCommand());
         registerCommand(new VoteCommand());
@@ -79,6 +81,7 @@ public class FlareBotSuggestions extends JBA {
             LOGGER.error("Failed to create table!", e);
         }
         for (Suggestion suggestion : DatabaseManager.getSuggestions()) {
+            LOGGER.info("Sending message for " + suggestion.getId());
             SuggestionsManager.getInstance().sendSuggestionMessage(suggestion);
         }
         SuggestionsManager.getInstance().orderSuggestions();

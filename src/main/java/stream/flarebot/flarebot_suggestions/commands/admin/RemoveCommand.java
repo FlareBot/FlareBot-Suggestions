@@ -1,14 +1,14 @@
 package stream.flarebot.flarebot_suggestions.commands.admin;
 
-import stream.flarebot.flarebot_suggestions.DatabaseManager;
-import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
-import stream.flarebot.flarebot_suggestions.Suggestion;
-import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 import com.walshydev.jba.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import stream.flarebot.flarebot_suggestions.DatabaseManager;
+import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
+import stream.flarebot.flarebot_suggestions.Suggestion;
+import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 
 public class RemoveCommand implements Command {
 
@@ -20,20 +20,20 @@ public class RemoveCommand implements Command {
                 try {
                     id = Integer.parseInt(args[0]);
                 } catch (NumberFormatException e) {
-                    channel.sendMessage("Invalid ID!").queue();
+                    channel.sendMessage(user.getAsMention() + " Invalid ID!").queue();
                     return;
                 }
 
                 Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
                     SuggestionsManager.getInstance().removeSuggestion(id);
-                    channel.sendMessage("Removed suggestion #" + id).queue();
+                    channel.sendMessage(user.getAsMention() + " Removed suggestion #" + id).queue();
                 } else {
-                    channel.sendMessage("Invalid suggestion ID! Please refer to the number at the start of the title in " +
+                    channel.sendMessage(user.getAsMention() + " Invalid suggestion ID! Please refer to the number at the start of the title in " +
                             "the suggestion embed").queue();
                 }
             } else
-                channel.sendMessage("**Usage**: `remove <id>`").queue();
+                channel.sendMessage(user.getAsMention() + " **Usage**: `remove <id>`").queue();
         }
     }
 
@@ -45,5 +45,10 @@ public class RemoveCommand implements Command {
     @Override
     public String getDescription() {
         return "Remove a suggestion";
+    }
+
+    @Override
+    public boolean deleteMessage() {
+        return true;
     }
 }

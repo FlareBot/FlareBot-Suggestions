@@ -1,11 +1,11 @@
 package stream.flarebot.flarebot_suggestions.commands.admin;
 
-import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
 import com.walshydev.jba.commands.Command;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
+import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
 
 public class QuitCommand implements Command {
 
@@ -23,5 +23,10 @@ public class QuitCommand implements Command {
     @Override
     public String getDescription() {
         return "Bye bye";
+    }
+
+    @Override
+    public boolean deleteMessage() {
+        return true;
     }
 }

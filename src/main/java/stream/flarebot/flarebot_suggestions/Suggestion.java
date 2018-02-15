@@ -1,14 +1,14 @@
 package stream.flarebot.flarebot_suggestions;
 
-import java.awt.Color;
 import net.dv8tion.jda.core.entities.User;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Suggestion {
 
-    private Integer id;
+    private int id = -1;
     private long suggestedBy;
     private Status status;
     private String suggestedByTag;
@@ -25,7 +25,7 @@ public class Suggestion {
         votedUsers.add(suggestedBy);
     }
 
-    public Suggestion(Integer id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId, Status status) {
+    public Suggestion(int id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId, Status status) {
         this.id = id;
         this.suggestedBy = suggestedBy;
         this.status = status;
@@ -42,11 +42,11 @@ public class Suggestion {
         this.messageId = messageId;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -98,7 +98,8 @@ public class Suggestion {
 
         Color c = null;
 
-        Status() {}
+        Status() {
+        }
 
         Status(Color c) {
             this.c = c;

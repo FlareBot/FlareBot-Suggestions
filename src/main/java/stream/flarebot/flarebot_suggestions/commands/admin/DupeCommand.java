@@ -20,14 +20,14 @@ public class DupeCommand implements Command {
                     id = Integer.parseInt(args[0]);
                     dupeId = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    channel.sendMessage("Invalid ID!").queue();
+                    channel.sendMessage(user.getAsMention() + " Invalid ID!").queue();
                     return;
                 }
 
                 SuggestionsManager.getInstance().mergeSuggestions(id, dupeId);
-                channel.sendMessage("Merged #" + dupeId + " into " + id).queue();
+                channel.sendMessage(user.getAsMention() + " Merged #" + dupeId + " into " + id).queue();
             } else
-                channel.sendMessage("**Usage**: `dupe <id> <dupe id>`").queue();
+                channel.sendMessage(user.getAsMention() + " **Usage**: `dupe <id> <dupe id>`").queue();
         }
     }
 
@@ -39,5 +39,10 @@ public class DupeCommand implements Command {
     @Override
     public String getDescription() {
         return "Merge dupe suggestions";
+    }
+
+    @Override
+    public boolean deleteMessage() {
+        return true;
     }
 }

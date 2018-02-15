@@ -1,58 +1,74 @@
 package stream.flarebot.flarebot_suggestions;
 
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 
 public class SuggestionsManager {
 
     private static final SuggestionsManager instance = new SuggestionsManager();
+    private static final Logger logger = LoggerFactory.getLogger(SuggestionsManager.class);
 
-    public void submitSuggestion(Suggestion suggestion) {
+    public void submitSuggestion(Suggestion suggestion, boolean order) {
         DatabaseManager.insertSuggestion(suggestion);
         sendSuggestionMessage(suggestion);
-        orderSuggestions();
+        if (order)
+            orderSuggestions();
     }
 
     public void sendSuggestionMessage(Suggestion suggestion) {
-        TextChannel tc =
-                FlareBotSuggestions.getInstance().getClient().getTextChannelById(Constants.SUGGESTIONS_CHANNEL);
-        try {
-            Message msg = tc.getMessageById(suggestion.getMessageId()).complete();
-            msg.editMessage(getSuggestionEmbed(suggestion)
-                    .build()).complete();
-        } catch (ErrorResponseException e) {
-            Message msg = tc.sendMessage(getSuggestionEmbed(suggestion).build()).complete();
-            suggestion.setMessageId(msg.getIdLong());
-            DatabaseManager.updateMessageId(suggestion.getId(), suggestion.getMessageId());
-        }
+        TextChannel tc = FlareBotSuggestions.getInstance().getSuggestionsChannel();
+        if (suggestion.getMessageId() == -1)
+            tc.sendMessage(getSuggestionEmbed(suggestion).build()).queue(msg -> {
+                logger.info("Sent new message for " + suggestion.getId());
+                suggestion.setMessageId(msg.getIdLong());
+                DatabaseManager.updateMessageId(suggestion.getId(), suggestion.getMessageId());
+            });
+        else
+            editSuggestionMessage(suggestion);
+    }
+
+    public void editSuggestionMessage(Suggestion suggestion) {
+        TextChannel tc = FlareBotSuggestions.getInstance().getSuggestionsChannel();
+        tc.getMessageById(suggestion.getMessageId()).queue(msg -> msg.editMessage(getSuggestionEmbed(suggestion)
+                .build()).queue(), fail -> {
+            logger.info("Couldn't find message by ID: " + suggestion.getMessageId());
+            suggestion.setMessageId(-1);
+            sendSuggestionMessage(suggestion);
+        });
     }
 
     public void orderSuggestions() {
-
         List<Suggestion> suggestions = DatabaseManager.getSuggestions();
 
-        suggestions.sort(Comparator.comparingInt(Suggestion::getVotes)); // Sort ascending
+        suggestions.sort((s1, s2) -> s1.getVotes() > s2.getVotes() ? 1 :
+                (s1.getVotes() == s2.getVotes() ?
+                        (s1.getId() < s2.getId() ? 1 : -1)
+                        : -1)); // Sort ascending
         Collections.reverse(suggestions); // Reverse to sort descending
 
-        List<Long> messageIDs =
-                suggestions.stream().map(Suggestion::getMessageId).sorted().collect(Collectors.toList()); // Sort IDs by time
+        List<Long> oldestToNewest =
+                suggestions.stream().map(Suggestion::getMessageId).sorted(Long::compare)
+                        .collect(Collectors.toList()); // Sort IDs by time
 
-        for (int i = 0; i < suggestions.size(); i++) {
-            Suggestion s = suggestions.get(i);
-            s.setMessageId(messageIDs.get(i));
-            DatabaseManager.insertSuggestion(s);
-            FlareBotSuggestions.getInstance()
-                    .getSuggestionsChannel()
-                    .getMessageById(s.getMessageId())
-                    .queue(m ->
-                            m.editMessage(getSuggestionEmbed(s).build())
-                                    .queue());
+        for (long messageId : oldestToNewest) {
+            int index = oldestToNewest.indexOf(messageId);
+            Suggestion s = suggestions.get(index);
+
+            if (s.getMessageId() != messageId) {
+                logger.info("Ordering " + s.getId() + "(Old ID: " + s.getMessageId() + ", new ID: " + messageId + ")");
+                s.setMessageId(messageId);
+                DatabaseManager.insertSuggestion(s);
+                FlareBotSuggestions.getInstance()
+                        .getSuggestionsChannel()
+                        .getMessageById(s.getMessageId())
+                        .queue(m -> m.editMessage(getSuggestionEmbed(s).build()).queue());
+            }
         }
     }
 
@@ -70,7 +86,7 @@ public class SuggestionsManager {
         Suggestion s = DatabaseManager.getSuggestion(id);
         if (s != null) {
             s.getVotedUsers().add(userId);
-            submitSuggestion(s);
+            submitSuggestion(s, true);
         }
     }
 
@@ -83,7 +99,7 @@ public class SuggestionsManager {
                 s.getVotedUsers().add(voter);
             }
             SuggestionsManager.getInstance().removeSuggestion(dupeId);
-            SuggestionsManager.getInstance().submitSuggestion(s);
+            SuggestionsManager.getInstance().submitSuggestion(s, true);
         }
     }
 

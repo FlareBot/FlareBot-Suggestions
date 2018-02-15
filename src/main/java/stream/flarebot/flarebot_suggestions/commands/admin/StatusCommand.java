@@ -1,8 +1,6 @@
 package stream.flarebot.flarebot_suggestions.commands.admin;
 
 import com.walshydev.jba.commands.Command;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -11,6 +9,9 @@ import stream.flarebot.flarebot_suggestions.DatabaseManager;
 import stream.flarebot.flarebot_suggestions.FlareBotSuggestions;
 import stream.flarebot.flarebot_suggestions.Suggestion;
 import stream.flarebot.flarebot_suggestions.SuggestionsManager;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class StatusCommand implements Command {
 
@@ -24,10 +25,10 @@ public class StatusCommand implements Command {
                     id = Integer.parseInt(args[0]);
                     status = Suggestion.Status.valueOf(args[1].toUpperCase());
                 } catch (NumberFormatException e) {
-                    channel.sendMessage("Invalid ID!").queue();
+                    channel.sendMessage(user.getAsMention() + " Invalid ID!").queue();
                     return;
                 } catch (IllegalArgumentException e) {
-                    channel.sendMessage("Invalid status! Options: " +
+                    channel.sendMessage(user.getAsMention() + " Invalid status! Options: " +
                             Arrays.stream(Suggestion.Status.values())
                                     .map(Enum::name)
                                     .map(String::toLowerCase)
@@ -39,7 +40,7 @@ public class StatusCommand implements Command {
                 Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
                     if (s.getStatus() == status) {
-                        channel.sendMessage("This suggestion already has that status!").queue();
+                        channel.sendMessage(user.getAsMention() + " This suggestion already has that status!").queue();
                     } else if (status == Suggestion.Status.COMPLETED) {
                         s.setStatus(status);
                         FlareBotSuggestions.getInstance().getSuggestionsChannel().getMessageById(s.getMessageId())
@@ -47,17 +48,18 @@ public class StatusCommand implements Command {
                                 });
                         DatabaseManager.insertSuggestion(s);
                     } else {
-                        channel.sendMessage("Changed #" + s.getId() + " to status: **" + SuggestionsManager.upperCaseFirst(status.name().toLowerCase()) + "**").queue();
+                        channel.sendMessage(user.getAsMention() + " Changed #" + s.getId() + " to status: **"
+                                + SuggestionsManager.upperCaseFirst(status.name().toLowerCase()) + "**").queue();
                         s.setStatus(status);
-                        SuggestionsManager.getInstance().submitSuggestion(s);
+                        SuggestionsManager.getInstance().submitSuggestion(s, false);
                     }
                 }
             } else {
-                channel.sendMessage("Invalid suggestion ID! Please refer to the number at the start of the title in " +
+                channel.sendMessage(user.getAsMention() + " Invalid suggestion ID! Please refer to the number at the start of the title in " +
                         "the suggestion embed").queue();
             }
         } else {
-            channel.sendMessage("**Usage**: `dupe <id> <status>`").queue();
+            channel.sendMessage(user.getAsMention() + " **Usage**: `dupe <id> <status>`").queue();
         }
     }
 
@@ -70,5 +72,10 @@ public class StatusCommand implements Command {
     @Override
     public String getDescription() {
         return "Changes the status of a suggestion";
+    }
+
+    @Override
+    public boolean deleteMessage() {
+        return true;
     }
 }
