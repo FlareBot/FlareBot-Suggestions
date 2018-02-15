@@ -20,10 +20,7 @@ import java.sql.SQLException;
 /*
 
  Still TODO
- * Ordering
- * Better saving
  * Limiting suggestions - Make regulars have more (maybe just not limited?)
-
  */
 public class FlareBotSuggestions extends JBA {
 
