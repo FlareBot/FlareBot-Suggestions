@@ -12,7 +12,7 @@ Votes
 X
 
 ## Developers
-You will need to do one thing before you can run the program and that is make a `config.json`. There is a sample one below which you can copy and use, just put that in the root directory and you will be able to use the bot. You should also note there is a `Constants.java` file which holds information relating to the guild, channel and staff role. Modify these values to test this yourself, make sure to not commit them though!
+You will need to do two things before you can run the program, one is make a `config.json`. There is a sample one below which you can copy and use, just put that in the root directory and you will be able to use the bot. Two, you will need to make a table called `suggestions` and the query to create that is also below. You should also note there is a `Constants.java` file which holds information relating to the guild, channel and staff role. Modify these values to test this yourself, make sure to not commit them though!
 
 ```json
 {
@@ -26,4 +26,17 @@ You will need to do one thing before you can run the program and that is make a 
     "database": "flarebot_suggestions"
   }
 }
+```
+
+```sql
+CREATE TABLE `suggestions` (
+  `suggestion_id` int(10) NOT NULL AUTO_INCREMENT,
+  `suggested_by` varchar(20) NOT NULL,
+  `suggested_by_tag` varchar(40) NOT NULL,
+  `suggestion` text NOT NULL,
+  `voted_users` text NOT NULL,
+  `message_id` varchar(20) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  PRIMARY KEY (`suggestion_id`)
+)
 ```

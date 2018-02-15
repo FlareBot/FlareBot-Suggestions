@@ -1,7 +1,6 @@
 package stream.flarebot.flarebot_suggestions;
 
 import com.walshydev.jba.SQLController;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,12 +44,7 @@ public class DatabaseManager {
     public static void deleteSuggestion(Suggestion s) {
         try {
             SQLController.runSqlTask(connection -> {
-                PreparedStatement statement;
-                statement =
-                        connection.prepareStatement("DELETE FROM flarebot_suggestions.suggestions WHERE suggestion_id = ?");
-
-                statement.setInt(1, s.getId());
-                statement.execute();
+                connection.createStatement().execute("DELETE FROM flarebot_suggestions.suggestions WHERE suggestion_id = " + s.getId());
             });
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,11 +101,7 @@ public class DatabaseManager {
     public static void updateMessageId(int suggestionID, long messageID) {
         try {
             SQLController.runSqlTask(connection -> {
-                PreparedStatement statement = connection.prepareStatement("UPDATE suggestions SET message_id = ? WHERE "
-                        + "suggestion_id = ?");
-                statement.setString(1, String.valueOf(messageID));
-                statement.setString(2, String.valueOf(suggestionID));
-                statement.execute();
+                connection.createStatement().execute(String.format("UPDATE suggestions SET message_id = %d WHERE suggestion_id = %d", messageID, suggestionID));
             });
         } catch (SQLException e) {
             e.printStackTrace();
