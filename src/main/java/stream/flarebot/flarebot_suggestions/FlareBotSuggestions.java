@@ -12,6 +12,7 @@ import stream.flarebot.flarebot_suggestions.commands.admin.DupeCommand;
 import stream.flarebot.flarebot_suggestions.commands.admin.QuitCommand;
 import stream.flarebot.flarebot_suggestions.commands.admin.RemoveCommand;
 import stream.flarebot.flarebot_suggestions.commands.admin.StatusCommand;
+import stream.flarebot.flarebot_suggestions.commands.admin.SubmitForCommand;
 
 import java.sql.SQLException;
 
@@ -54,6 +55,7 @@ public class FlareBotSuggestions extends JBA {
         registerCommand(new RemoveCommand());
         registerCommand(new QuitCommand());
         registerCommand(new StatusCommand());
+        registerCommand(new SubmitForCommand());
     }
 
     public static FlareBotSuggestions getInstance() {
