@@ -44,6 +44,11 @@ public class SubmitCommand implements Command {
     }
 
     @Override
+    public String[] getAliases() {
+        return new String[] {"submit", "s"};
+    }
+
+    @Override
     public boolean deleteMessage() {
         return true;
     }
