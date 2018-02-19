@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import stream.flarebot.flarebot_suggestions.commands.EditCommand;
 import stream.flarebot.flarebot_suggestions.commands.SubmitCommand;
 import stream.flarebot.flarebot_suggestions.commands.SuggestionCommand;
 import stream.flarebot.flarebot_suggestions.commands.VoteCommand;
@@ -51,6 +52,7 @@ public class FlareBotSuggestions extends JBA {
         registerCommand(new SubmitCommand());
         registerCommand(new VoteCommand());
         registerCommand(new SuggestionCommand());
+        registerCommand(new EditCommand());
 
         registerCommand(new DupeCommand());
         registerCommand(new RemoveCommand());

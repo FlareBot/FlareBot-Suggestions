@@ -46,6 +46,7 @@ public class SuggestionsManager {
     public void orderSuggestions() {
         List<Suggestion> suggestions = DatabaseManager.getSuggestions();
 
+        //noinspection ComparatorMethodParameterNotUsed
         suggestions.sort((s1, s2) -> s1.getVotes() > s2.getVotes() ? 1 :
                 (s1.getVotes() == s2.getVotes() ?
                         (s1.getId() < s2.getId() ? 1 : -1)
