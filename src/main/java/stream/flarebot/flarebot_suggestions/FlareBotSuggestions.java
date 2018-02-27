@@ -80,7 +80,7 @@ public class FlareBotSuggestions extends JBA {
             SQLController.runSqlTask(conn -> {
                 conn.createStatement().execute("CREATE TABLE IF NOT EXISTS suggestions (suggestion_id INT(10) PRIMARY KEY AUTO_INCREMENT, " +
                         "suggested_by VARCHAR(20), suggested_by_tag VARCHAR(40), suggestion TEXT, voted_users TEXT, " +
-                        "message_id VARCHAR(20), status VARCHAR(15))");
+                        "message_id VARCHAR(20), status VARCHAR(15), status_comment TEXT)");
             });
         } catch (SQLException e) {
             LOGGER.error("Failed to create table!", e);

@@ -40,7 +40,7 @@ public class EditCommand implements Command {
                     }
 
                     s.setSuggestion(msg);
-                    SuggestionsManager.getInstance().editSuggestionMessage(s);
+                    SuggestionsManager.getInstance().submitSuggestion(s, false);
                     channel.sendMessage(user.getAsMention() + " Edited #" + s.getId()).queue();
                 } else
                     channel.sendMessage(user.getAsMention() + " You can't edit a suggestion that isn't yours!").queue();

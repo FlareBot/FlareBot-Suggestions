@@ -17,10 +17,11 @@ public class DatabaseManager {
         try {
             SQLController.runSqlTask(connection -> {
                 PreparedStatement statement = connection.prepareStatement("INSERT INTO suggestions (suggestion_id, "
-                                + "suggested_by, suggested_by_tag, suggestion, voted_users, message_id, status) "
-                                + "VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE suggested_by = VALUES(suggested_by), "
+                                + "suggested_by, suggested_by_tag, suggestion, voted_users, message_id, status, status_comment) "
+                                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE suggested_by = VALUES(suggested_by), "
                                 + "suggested_by_tag = VALUES(suggested_by_tag), suggestion = VALUES(suggestion), "
-                                + "voted_users = VALUES(voted_users), message_id = VALUES(message_id), status = VALUES(status)",
+                                + "voted_users = VALUES(voted_users), message_id = VALUES(message_id), status = VALUES(status), " +
+                                "status_comment = VALUES(status_comment)",
                         Statement.RETURN_GENERATED_KEYS);
                 statement.setInt(1, s.getId() > 0 ? s.getId() : 0);
                 statement.setString(2, String.valueOf(s.getSuggestedBy()));
@@ -29,6 +30,7 @@ public class DatabaseManager {
                 statement.setString(5, (s.getVotedUsers().stream().map(String::valueOf).collect(Collectors.joining(","))));
                 statement.setString(6, String.valueOf(s.getMessageId()));
                 statement.setString(7, s.getStatus().name());
+                statement.setString(8, s.getStatusComment());
 
                 int rowsChanged = statement.executeUpdate();
                 ResultSet keys = statement.getGeneratedKeys();
@@ -67,7 +69,8 @@ public class DatabaseManager {
                             set.getString("suggestion"),
                             voted,
                             Long.parseLong(set.getString("message_id"))
-                            , Suggestion.Status.valueOf(set.getString("status")));
+                            , Suggestion.Status.valueOf(set.getString("status")),
+                            set.getString("status_comment"));
                 }
             });
         } catch (SQLException e) {
@@ -89,7 +92,7 @@ public class DatabaseManager {
                     suggestion.add(new Suggestion(set.getInt("suggestion_id"),
                             Long.parseLong(set.getString("suggested_by")), set.getString("suggested_by_tag"),
                             set.getString("suggestion"), voted, Long.parseLong(set.getString("message_id")),
-                            Suggestion.Status.valueOf(set.getString("status"))));
+                            Suggestion.Status.valueOf(set.getString("status")), set.getString("status_comment")));
                 }
             });
         } catch (SQLException e) {

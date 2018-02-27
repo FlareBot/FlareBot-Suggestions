@@ -16,6 +16,7 @@ public class Suggestion {
     private Set<Long> votedUsers = new HashSet<>();
 
     private long messageId = -1;
+    private String statusComment;
 
     public Suggestion(User user, String suggestion) {
         this.suggestedBy = user.getIdLong();
@@ -25,7 +26,7 @@ public class Suggestion {
         votedUsers.add(suggestedBy);
     }
 
-    public Suggestion(int id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId, Status status) {
+    public Suggestion(int id, long suggestedBy, String suggestedByTag, String suggestion, Set<Long> votedUsers, long messageId, Status status, String statusComment) {
         this.id = id;
         this.suggestedBy = suggestedBy;
         this.status = status;
@@ -40,6 +41,7 @@ public class Suggestion {
         this.suggestion = suggestion;
         this.votedUsers = votedUsers;
         this.messageId = messageId;
+        this.statusComment = statusComment;
     }
 
     public int getId() {
@@ -88,6 +90,14 @@ public class Suggestion {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getStatusComment() {
+        return statusComment;
+    }
+
+    public void setStatusComment(String statusComment) {
+        this.statusComment = statusComment;
     }
 
     public enum Status {

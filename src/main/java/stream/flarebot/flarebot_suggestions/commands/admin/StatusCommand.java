@@ -18,7 +18,7 @@ public class StatusCommand implements Command {
     @Override
     public void onCommand(User user, MessageChannel channel, Message message, String[] args, Member member) {
         if (FlareBotSuggestions.getInstance().isStaff(user)) {
-            if (args.length == 2) {
+            if (args.length >= 2) {
                 int id;
                 Suggestion.Status status;
                 try {
@@ -37,6 +37,10 @@ public class StatusCommand implements Command {
                                     .collect(Collectors.joining(", "))).queue();
                     return;
                 }
+                String statusComment = null;
+                if (args.length >= 3) {
+                    statusComment = Arrays.stream(args).skip(2).collect(Collectors.joining(" "));
+                }
                 Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
                     if (s.getStatus() == status) {
@@ -49,8 +53,10 @@ public class StatusCommand implements Command {
                         DatabaseManager.insertSuggestion(s);
                     } else {
                         channel.sendMessage(user.getAsMention() + " Changed #" + s.getId() + " to status: **"
-                                + SuggestionsManager.upperCaseFirst(status.name().toLowerCase()) + "**").queue();
+                                + SuggestionsManager.upperCaseFirst(status.name().toLowerCase()) + "**" +
+                                (statusComment == null ? "" : " with the comment: `" + statusComment + "`")).queue();
                         s.setStatus(status);
+                        s.setStatusComment(statusComment);
                         SuggestionsManager.getInstance().submitSuggestion(s, false);
                     }
                 }
