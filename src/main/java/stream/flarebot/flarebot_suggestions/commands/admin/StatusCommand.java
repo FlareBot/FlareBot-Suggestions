@@ -34,7 +34,7 @@ public class StatusCommand implements Command {
                     try {
                         status = Suggestion.Status.valueOf(args[1].toUpperCase());
                         statusComment = Arrays.stream(args).skip(2).collect(Collectors.joining(" "));
-                        if (statusComment.equals("")) statusComment = null;
+                        if (statusComment.isEmpty()) statusComment = null;
                     } catch (IllegalArgumentException e) {
                         statusComment = Arrays.stream(args).skip(1).collect(Collectors.joining(" "));
                         channel.sendMessage("Changing the status comment to: `" + statusComment + "`").queue();
