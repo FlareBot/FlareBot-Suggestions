@@ -103,6 +103,7 @@ public class Suggestion {
     public enum Status {
         OPEN(Color.CYAN),
         IN_PROGRESS(Color.YELLOW),
+        NEEDS_MORE_DETAIL(Color.ORANGE),
         REJECTED(Color.RED),
         COMPLETED;
 
