@@ -20,36 +20,33 @@ public class StatusCommand implements Command {
         if (FlareBotSuggestions.getInstance().isStaff(user)) {
             if (args.length >= 2) {
                 int id;
-                Suggestion.Status status;
                 try {
                     id = Integer.parseInt(args[0]);
-                    status = Suggestion.Status.valueOf(args[1].toUpperCase());
                 } catch (NumberFormatException e) {
                     channel.sendMessage(user.getAsMention() + " Invalid ID!").queue();
                     return;
-                } catch (IllegalArgumentException e) {
-                    channel.sendMessage(user.getAsMention() + " Invalid status! Options: " +
-                            Arrays.stream(Suggestion.Status.values())
-                                    .map(Enum::name)
-                                    .map(String::toLowerCase)
-                                    .map(SuggestionsManager::upperCaseFirst)
-                                    .map(s -> "**" + s + "**")
-                                    .collect(Collectors.joining(", "))).queue();
-                    return;
-                }
-                String statusComment = null;
-                if (args.length >= 3) {
-                    statusComment = Arrays.stream(args).skip(2).collect(Collectors.joining(" "));
                 }
                 Suggestion s = DatabaseManager.getSuggestion(id);
                 if (s != null) {
-                    if (s.getStatus() == status) {
+                    Suggestion.Status status;
+                    String statusComment;
+                    try {
+                        status = Suggestion.Status.valueOf(args[1].toUpperCase());
+                        statusComment = Arrays.stream(args).skip(2).collect(Collectors.joining(" "));
+                        if (statusComment.equals("")) statusComment = null;
+                    } catch (IllegalArgumentException e) {
+                        statusComment = Arrays.stream(args).skip(1).collect(Collectors.joining(" "));
+                        channel.sendMessage("Changing the status comment to: `" + statusComment + "`").queue();
+                        s.setStatusComment(statusComment);
+                        SuggestionsManager.getInstance().submitSuggestion(s, false);
+                        return;
+                    }
+                    if (s.getStatus() == status && (s.getStatusComment().equalsIgnoreCase(statusComment))) {
                         channel.sendMessage(user.getAsMention() + " This suggestion already has that status!").queue();
                     } else if (status == Suggestion.Status.COMPLETED) {
                         s.setStatus(status);
                         FlareBotSuggestions.getInstance().getSuggestionsChannel().getMessageById(s.getMessageId())
-                                .queue(msg -> msg.delete().queue(), fail -> {
-                                });
+                                .queue(msg -> msg.delete().queue(), e -> {});
                         DatabaseManager.insertSuggestion(s);
                     } else {
                         channel.sendMessage(user.getAsMention() + " Changed #" + s.getId() + " to status: **"
@@ -59,16 +56,15 @@ public class StatusCommand implements Command {
                         s.setStatusComment(statusComment);
                         SuggestionsManager.getInstance().submitSuggestion(s, false);
                     }
+                } else {
+                    channel.sendMessage(user.getAsMention() + " Invalid suggestion ID! Please refer to the number at the start of the title in " +
+                            "the suggestion embed").queue();
                 }
             } else {
-                channel.sendMessage(user.getAsMention() + " Invalid suggestion ID! Please refer to the number at the start of the title in " +
-                        "the suggestion embed").queue();
+                channel.sendMessage(user.getAsMention() + " **Usage**: `status <id> <status> [comment]`").queue();
             }
-        } else {
-            channel.sendMessage(user.getAsMention() + " **Usage**: `dupe <id> <status>`").queue();
         }
     }
-
 
     @Override
     public String getCommand() {
