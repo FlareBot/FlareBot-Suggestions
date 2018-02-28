@@ -11,6 +11,7 @@ import stream.flarebot.flarebot_suggestions.Suggestion;
 import stream.flarebot.flarebot_suggestions.SuggestionsManager;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StatusCommand implements Command {
@@ -41,7 +42,7 @@ public class StatusCommand implements Command {
                         SuggestionsManager.getInstance().submitSuggestion(s, false);
                         return;
                     }
-                    if (s.getStatus() == status && (s.getStatusComment().equalsIgnoreCase(statusComment))) {
+                    if (s.getStatus() == status && (Objects.equals(s.getStatusComment(), statusComment))) {
                         channel.sendMessage(user.getAsMention() + " This suggestion already has that status!").queue();
                     } else if (status == Suggestion.Status.COMPLETED) {
                         s.setStatus(status);
