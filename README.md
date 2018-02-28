@@ -37,6 +37,7 @@ CREATE TABLE `suggestions` (
   `voted_users` text NOT NULL,
   `message_id` varchar(20) NOT NULL,
   `status` varchar(20) NOT NULL,
+  `status_comment` TEXT,
   PRIMARY KEY (`suggestion_id`)
 )
 ```
