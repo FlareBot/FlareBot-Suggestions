@@ -119,6 +119,11 @@ public class Suggestion {
         public Color getColor() {
             return c;
         }
+
+        @Override
+        public String toString() {
+            return SuggestionsManager.upperCaseFirst(name().replace("_", " "));
+        }
     }
 
 }
