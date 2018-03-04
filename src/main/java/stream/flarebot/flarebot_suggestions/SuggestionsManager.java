@@ -110,7 +110,7 @@ public class SuggestionsManager {
                         + " - Suggestion by " + suggestion.getSuggestedByTag() + " (" + suggestion.getSuggestedBy() + ")")
                 .setDescription(suggestion.getSuggestion())
                 .addField("Votes", String.valueOf(suggestion.getVotes()), false)
-                .addField("Status", upperCaseFirst(suggestion.getStatus().name().toLowerCase()), false)
+                .addField("Status", upperCaseFirst(suggestion.getStatus().name().replace("_", " ").toLowerCase()), false)
                 .setColor(suggestion.getStatus().getColor());
         if (suggestion.getStatusComment() != null) {
             builder.addField("Status Comment", upperCaseFirst(suggestion.getStatusComment().toLowerCase()), false);

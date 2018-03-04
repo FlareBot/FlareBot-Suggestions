@@ -51,7 +51,7 @@ public class StatusCommand implements Command {
                         DatabaseManager.insertSuggestion(s);
                     } else {
                         channel.sendMessage(user.getAsMention() + " Changed #" + s.getId() + " to status: **"
-                                + SuggestionsManager.upperCaseFirst(status.name().toLowerCase()) + "**" +
+                                + SuggestionsManager.upperCaseFirst(status.name().replace("_", " ").toLowerCase()) + "**" +
                                 (statusComment == null ? "" : " with the comment: `" + statusComment + "`")).queue();
                         s.setStatus(status);
                         s.setStatusComment(statusComment);
