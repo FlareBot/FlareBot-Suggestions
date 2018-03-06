@@ -122,7 +122,7 @@ public class Suggestion {
 
         @Override
         public String toString() {
-            return SuggestionsManager.upperCaseFirst(name().replace("_", " "));
+            return SuggestionsManager.upperCaseFirst(name().toLowerCase().replace("_", " "));
         }
     }
 
