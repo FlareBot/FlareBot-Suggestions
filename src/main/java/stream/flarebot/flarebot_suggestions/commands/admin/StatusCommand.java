@@ -36,18 +36,15 @@ public class StatusCommand implements Command {
                         statusComment = Arrays.stream(args).skip(2).collect(Collectors.joining(" "));
                         if (statusComment.isEmpty()) statusComment = null;
                     } catch (IllegalArgumentException e) {
-                        statusComment = Arrays.stream(args).skip(1).collect(Collectors.joining(" "));
-                        channel.sendMessage("Changing the status comment to: `" + statusComment + "`").queue();
-                        s.setStatusComment(statusComment);
-                        SuggestionsManager.getInstance().submitSuggestion(s, false);
+                        channel.sendMessage(user.getAsMention() + " Invalid status! Available: " +
+                        Arrays.stream(Suggestion.Status.values()).map(stat -> "`" + stat + "`").collect(Collectors.joining(", "))).queue();
                         return;
                     }
-                    if (s.getStatus() == status && (Objects.equals(s.getStatusComment(), statusComment))) {
-                        channel.sendMessage(user.getAsMention() + " This suggestion already has that status!").queue();
-                    } else if (status == Suggestion.Status.COMPLETED) {
+                    if (status == Suggestion.Status.COMPLETED) {
                         s.setStatus(status);
                         FlareBotSuggestions.getInstance().getSuggestionsChannel().getMessageById(s.getMessageId())
-                                .queue(msg -> msg.delete().queue(), e -> {});
+                                .queue(msg -> msg.delete().queue(), e -> {
+                                });
                         DatabaseManager.insertSuggestion(s);
                     } else {
                         channel.sendMessage(user.getAsMention() + " Changed #" + s.getId() + " to status: **"
